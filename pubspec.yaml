@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_inner_shadow: ^0.0.1
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
@@ -27,3 +27,5 @@ flutter:
 
   uses-material-design: true
 
+  assets:
+    - assets/icons/

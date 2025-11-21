@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:flutter_inner_shadow/flutter_inner_shadow.dart';
 
 void main() {
 
@@ -12,89 +15,163 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
+      title: 'SoundCircle',
 
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const HomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class HomePage extends StatefulWidget {
 
-  final String title;
+  const HomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+      body: Align(
+        alignment: Alignment.center,
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: GlassContainer(
+                width: 300,
+                height: 60,
+                red: 232,
+                green: 96,
+                blue: 170,
+                radius: 20,
+              ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: GlassContainer(
+                width: 200,
+                height: 400,
+                red: 255,
+                green: 255,
+                blue: 255,
+                bottomLeftBorderRadius: 20,
+                topLeftBorderRadius: 20,
+                bottomRightBorderRadius: 0,
+                topRightBorderRadius: 0,
+                opacity: 0.2,
+              ),
+            ),
+            
+          ],
+        )
+      )
+    );
+  }
+}
+
+class GlassContainer extends StatelessWidget {
+
+  final double width;
+  final double height;
+
+  final double radius;
+
+  final double topLeftBorderRadius;
+  final double topRightBorderRadius;
+  final double bottomLeftBorderRadius;
+  final double bottomRightBorderRadius;
+
+  final int red;
+  final int green;
+  final int blue;
+
+  final double brightness;
+
+  final double opacity;
+  final double blur;
+
+  const GlassContainer({
+    super.key,
+    required this.width,
+    required this.height,
+    required this.red,
+    required this.green,
+    required this.blue,
+    this.brightness = 0.6,
+    this.topLeftBorderRadius = 0,
+    this.topRightBorderRadius = 0,
+    this.bottomLeftBorderRadius = 0,
+    this.bottomRightBorderRadius = 0,
+    this.radius = 0,
+    this.opacity = 0.8,
+    this.blur = 3
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(topLeftBorderRadius),
+          bottomLeft: Radius.circular(bottomLeftBorderRadius),
+          topRight: Radius.circular(topRightBorderRadius),
+          bottomRight: Radius.circular(bottomRightBorderRadius)
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+        child: InnerShadow(
+          shadows: [
+            Shadow(
+              color: Colors.white.withOpacity(0.5),
+              blurRadius: 6,
+              offset: Offset(1, 4),
             ),
           ],
-        ),
+          child: Container(
+            width: width,
+            height: height,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  topLeft: (radius == 0) ? Radius.circular(topLeftBorderRadius) : Radius.circular(radius),
+                  bottomLeft: (radius == 0) ? Radius.circular(bottomLeftBorderRadius) : Radius.circular(radius),
+                  topRight: (radius == 0) ? Radius.circular(topRightBorderRadius) : Radius.circular(radius),
+                  bottomRight: (radius == 0) ? Radius.circular(bottomRightBorderRadius) : Radius.circular(radius)
+              ),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.3),
+                width: 1.5,
+              ),
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  HSLColor.fromColor(Color.fromRGBO(red, green, blue, opacity))
+                      .withLightness(brightness)
+                      .toColor(),
+                  Color.fromRGBO(red, green, blue, opacity),
+                ],
+              ),
+              /*
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.white.withOpacity(0.15),
+                  blurRadius: 20,
+                  offset: Offset(-5, -5),
+                ),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 20,
+                  offset: Offset(5, 5),
+                ),
+              ],
+               */
+            ),
+          ),
+        )
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
