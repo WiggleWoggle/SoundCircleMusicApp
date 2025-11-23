@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -41,33 +42,134 @@ class _HomePageState extends State<HomePage> {
           children: [
             Align(
               alignment: Alignment.center,
-              child: GlassContainer(
-                width: 300,
-                height: 60,
-                red: 232,
-                green: 96,
-                blue: 170,
-                radius: 20,
-              ),
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: GlassContainer(
-                width: 200,
-                height: 400,
-                red: 255,
-                green: 255,
-                blue: 255,
-                bottomLeftBorderRadius: 20,
-                topLeftBorderRadius: 20,
-                bottomRightBorderRadius: 0,
-                topRightBorderRadius: 0,
-                opacity: 0.2,
-              ),
-            ),
-            
+              child: MusicBarWidget(),
+            )
           ],
         )
+      )
+    );
+  }
+}
+
+class MusicBarWidget extends StatefulWidget {
+
+  @override
+  State<MusicBarWidget> createState() => _MusicBarWidgetState();
+}
+
+class _MusicBarWidgetState extends State<MusicBarWidget> {
+
+  bool expanded = false;
+  double expandedOpacity = 1;
+  double scale = 1;
+
+  void toggleExpanded() {
+    setState(() {
+      expanded = !expanded;
+
+      if (expanded) {
+        expandedOpacity = 0;
+      }
+      if (!expanded) {
+        expandedOpacity = 1;
+      }
+    });
+  }
+
+  void scaleUpWidget() {
+    setState(() {
+      scale = 1.1;
+    });
+  }
+
+  void scaleDownWidget() {
+    setState(() {
+      scale = 1;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        onLongPressStart: (_) {
+          scaleUpWidget();
+          toggleExpanded();
+        },
+        onLongPressEnd: (_) {
+          scaleDownWidget();
+        },
+      child: AnimatedScale(
+        scale: scale,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.elasticOut,
+        child: Stack(
+          children: [
+            GlassContainer(
+              width: MediaQuery.of(context).size.width * 0.85,
+              height: expanded ? MediaQuery.of(context).size.height * 0.65 : MediaQuery.of(context).size.height * 0.073,
+              red: 232,
+              green: 96,
+              blue: 170,
+              radius: MediaQuery.of(context).size.width * 0.05,
+            ),
+            Stack(
+              children: [
+                AnimatedOpacity(
+                  opacity: expandedOpacity,
+                  curve: Curves.easeInOutCirc,
+                  duration: Duration(milliseconds: 300),
+                  child: GlassContainer(
+                    width: MediaQuery.of(context).size.width * 0.35,
+                    height: MediaQuery.of(context).size.height * 0.073,
+                    red: 232,
+                    green: 96,
+                    blue: 170,
+                    topRightBorderRadius: 0,
+                    bottomLeftBorderRadius: MediaQuery.of(context).size.width * 0.05,
+                    topLeftBorderRadius: MediaQuery.of(context).size.width * 0.05,
+                    bottomRightBorderRadius: 0,
+                  ),
+                ),
+              ],
+            ),
+            Positioned.fill(
+              child: AnimatedAlign(
+                  alignment: expanded ? Alignment.topCenter : Alignment.centerLeft,
+                  duration: Duration(milliseconds: 350),
+                  curve: Curves.easeInOutCubic,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: expanded ? 0 : MediaQuery.of(context).size.width * 0.03,
+                      top: expanded ? MediaQuery.of(context).size.width * 0.05 : 0
+                    ),
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 350),
+                      curve: Curves.easeInOutCubic,
+                      width: expanded ? MediaQuery.of(context).size.width * 0.77 : MediaQuery.of(context).size.width * 0.1,
+                      height: expanded ? MediaQuery.of(context).size.width * 0.77 : MediaQuery.of(context).size.width * 0.1,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(expanded ? MediaQuery.of(context).size.width * 0.03 : MediaQuery.of(context).size.width * 0.015),
+                        image: DecorationImage(
+                          image: AssetImage("assets/images/pinktape.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      child: InnerShadow(
+                          shadows: [
+                            Shadow(
+                              color: Colors.white.withOpacity(0.5),
+                              blurRadius: 6,
+                              offset: Offset(1, 4),
+                            ),
+                          ],
+                      )
+                    ),
+                  )
+              ),
+            )
+          ],
+        ),
       )
     );
   }
@@ -94,6 +196,10 @@ class GlassContainer extends StatelessWidget {
   final double opacity;
   final double blur;
 
+  final Widget? child;
+
+  final int duration;
+
   const GlassContainer({
     super.key,
     required this.width,
@@ -108,7 +214,9 @@ class GlassContainer extends StatelessWidget {
     this.bottomRightBorderRadius = 0,
     this.radius = 0,
     this.opacity = 0.8,
-    this.blur = 3
+    this.blur = 3,
+    this.child,
+    this.duration = 300
   });
 
   @override
@@ -130,7 +238,9 @@ class GlassContainer extends StatelessWidget {
               offset: Offset(1, 4),
             ),
           ],
-          child: Container(
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: duration),
+            curve: Curves.easeInOutCubic,
             width: width,
             height: height,
             decoration: BoxDecoration(
@@ -169,6 +279,7 @@ class GlassContainer extends StatelessWidget {
               ],
                */
             ),
+            child: child,
           ),
         )
       ),
