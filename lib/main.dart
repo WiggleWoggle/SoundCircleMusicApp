@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter_inner_shadow/flutter_inner_shadow.dart';
@@ -42,7 +43,9 @@ class _HomePageState extends State<HomePage> {
           children: [
             Align(
               alignment: Alignment.center,
-              child: MusicBarWidget(),
+              child: MusicBarWidget(
+                color: Color.fromRGBO(232, 96, 170, 1),
+              ),
             )
           ],
         )
@@ -52,6 +55,10 @@ class _HomePageState extends State<HomePage> {
 }
 
 class MusicBarWidget extends StatefulWidget {
+
+  final Color color;
+
+  const MusicBarWidget({super.key, required this.color});
 
   @override
   State<MusicBarWidget> createState() => _MusicBarWidgetState();
@@ -107,10 +114,10 @@ class _MusicBarWidgetState extends State<MusicBarWidget> {
             GlassContainer(
               width: MediaQuery.of(context).size.width * 0.85,
               height: expanded ? MediaQuery.of(context).size.height * 0.65 : MediaQuery.of(context).size.height * 0.073,
-              red: 232,
-              green: 96,
-              blue: 170,
-              radius: MediaQuery.of(context).size.width * 0.05,
+              red: widget.color.red,
+              green: widget.color.green,
+              blue: widget.color.blue,
+              radius: expanded ? MediaQuery.of(context).size.width * 0.07 : MediaQuery.of(context).size.width * 0.05,
             ),
             Stack(
               children: [
@@ -121,9 +128,9 @@ class _MusicBarWidgetState extends State<MusicBarWidget> {
                   child: GlassContainer(
                     width: MediaQuery.of(context).size.width * 0.35,
                     height: MediaQuery.of(context).size.height * 0.073,
-                    red: 232,
-                    green: 96,
-                    blue: 170,
+                    red: widget.color.red,
+                    green: widget.color.green,
+                    blue: widget.color.blue,
                     topRightBorderRadius: 0,
                     bottomLeftBorderRadius: MediaQuery.of(context).size.width * 0.05,
                     topLeftBorderRadius: MediaQuery.of(context).size.width * 0.05,
@@ -131,6 +138,40 @@ class _MusicBarWidgetState extends State<MusicBarWidget> {
                   ),
                 ),
               ],
+            ),
+            Positioned.fill(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.05),
+                    child: AnimatedScale(
+                      scale: expanded ? 0 : 1,
+                      duration: Duration(milliseconds: 100),
+                      curve: Curves.easeInOutCubic,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.23,
+                        height: MediaQuery.of(context).size.height * 0.073,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Image.asset(
+                              "assets/icons/previous.png",
+                              scale: MediaQuery.of(context).size.width * 0.06,
+                            ),
+                            Image.asset(
+                              "assets/icons/pause.png",
+                              scale: MediaQuery.of(context).size.width * 0.06,
+                            ),
+                            Image.asset(
+                              "assets/icons/next.png",
+                              scale: MediaQuery.of(context).size.width * 0.06,
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  )
+                )
             ),
             Positioned.fill(
               child: AnimatedAlign(
@@ -142,32 +183,175 @@ class _MusicBarWidgetState extends State<MusicBarWidget> {
                         left: expanded ? 0 : MediaQuery.of(context).size.width * 0.03,
                       top: expanded ? MediaQuery.of(context).size.width * 0.05 : 0
                     ),
-                    child: AnimatedContainer(
-                      duration: Duration(milliseconds: 350),
-                      curve: Curves.easeInOutCubic,
-                      width: expanded ? MediaQuery.of(context).size.width * 0.77 : MediaQuery.of(context).size.width * 0.1,
-                      height: expanded ? MediaQuery.of(context).size.width * 0.77 : MediaQuery.of(context).size.width * 0.1,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(expanded ? MediaQuery.of(context).size.width * 0.03 : MediaQuery.of(context).size.width * 0.015),
-                        image: DecorationImage(
-                          image: AssetImage("assets/images/pinktape.png"),
-                          fit: BoxFit.cover,
+                    child: InnerShadow(
+                      shadows: [
+                        Shadow(
+                          color: Colors.white.withOpacity(expanded ? 0.5 : 0),
+                          blurRadius: 6,
+                          offset: Offset(1, 4),
+                        ),
+                      ],
+                      child: AnimatedContainer(
+                        duration: Duration(milliseconds: 350),
+                        curve: Curves.easeInOutCubic,
+                        width: expanded ? MediaQuery.of(context).size.width * 0.77 : MediaQuery.of(context).size.width * 0.1,
+                        height: expanded ? MediaQuery.of(context).size.width * 0.77 : MediaQuery.of(context).size.width * 0.1,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(expanded ? MediaQuery.of(context).size.width * 0.04 : MediaQuery.of(context).size.width * 0.015),
+                          image: DecorationImage(
+                            image: AssetImage("assets/images/pinktape.png"),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                      child: InnerShadow(
-                          shadows: [
-                            Shadow(
-                              color: Colors.white.withOpacity(0.5),
-                              blurRadius: 6,
-                              offset: Offset(1, 4),
-                            ),
-                          ],
-                      )
-                    ),
+                    )
                   )
               ),
-            )
+            ),
+            Positioned.fill(
+              child: AnimatedAlign(
+                alignment: Alignment.center,
+                duration: Duration(milliseconds: 350),
+                curve: Curves.easeInOutCubic,
+                child: AnimatedScale(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeInOutCubic,
+                  scale: expanded ? 1 : 0,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.32),
+                    child: GlassContainer(
+                      width: MediaQuery.of(context).size.width * 0.77,
+                      height: expanded ? MediaQuery.of(context).size.height * 0.13 : 0,
+                      red: widget.color.red,
+                      green: widget.color.green,
+                      blue: widget.color.blue,
+                      radius: MediaQuery.of(context).size.width * 0.04,
+                      child: Stack(
+                        children: [
+
+                        ],
+                      ),
+                    ),
+                  )
+                ),
+              ),
+            ),
+            Positioned.fill(
+              child: AnimatedAlign(
+                alignment: Alignment.center,
+                duration: Duration(milliseconds: 350),
+                curve: Curves.easeInOutCubic,
+                child: Padding(
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.55),
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: MediaQuery.of(context).size.width * 0.04,
+                          bottom: MediaQuery.of(context).size.height * 0.02
+                        ),
+                        child: Align(
+                          alignment: Alignment.bottomLeft,
+                          child: AnimatedScale(
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOutCubic,
+                            scale: expanded ? 1 : 0,
+                            child: GlassContainer(
+                              width: MediaQuery.of(context).size.width * 0.13,
+                              height: MediaQuery.of(context).size.width * 0.13,
+                              red: widget.color.red,
+                              green: widget.color.green,
+                              blue: widget.color.blue,
+                              radius: MediaQuery.of(context).size.width * 0.1,
+                              child: Image.asset(
+                                "assets/icons/waveform.png",
+                                scale: MediaQuery.of(context).size.width * 0.04,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: MediaQuery.of(context).size.width * 0.37,
+                            bottom: MediaQuery.of(context).size.height * 0.02
+                        ),
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: AnimatedScale(
+                            duration: Duration(milliseconds: 350),
+                            curve: Curves.easeInOutCubic,
+                            scale: expanded ? 1 : 0,
+                            child: GlassContainer(
+                              width: MediaQuery.of(context).size.width * 0.13,
+                              height: MediaQuery.of(context).size.width * 0.13,
+                              red: widget.color.red,
+                              green: widget.color.green,
+                              blue: widget.color.blue,
+                              radius: MediaQuery.of(context).size.width * 0.1,
+                              child: Icon(Icons.more_horiz_rounded, color: Colors.white, size: MediaQuery.of(context).size.width * 0.07,),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: MediaQuery.of(context).size.width * 0.2,
+                            bottom: MediaQuery.of(context).size.height * 0.02
+                        ),
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: AnimatedScale(
+                            duration: Duration(milliseconds: 400),
+                            curve: Curves.easeInOutCubic,
+                            scale: expanded ? 1 : 0,
+                            child: GlassContainer(
+                              width: MediaQuery.of(context).size.width * 0.13,
+                              height: MediaQuery.of(context).size.width * 0.13,
+                              red: widget.color.red,
+                              green: widget.color.green,
+                              blue: widget.color.blue,
+                              radius: MediaQuery.of(context).size.width * 0.1,
+                              child: Image.asset(
+                                "assets/icons/queue.png",
+                                scale: MediaQuery.of(context).size.width * 0.035,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            right: MediaQuery.of(context).size.width * 0.04,
+                            bottom: MediaQuery.of(context).size.height * 0.02
+                        ),
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: AnimatedScale(
+                            duration: Duration(milliseconds: 450),
+                            curve: Curves.easeInOutCubic,
+                            scale: expanded ? 1 : 0,
+                            child: GlassContainer(
+                              width: MediaQuery.of(context).size.width * 0.13,
+                              height: MediaQuery.of(context).size.width * 0.13,
+                              red: widget.color.red,
+                              green: widget.color.green,
+                              blue: widget.color.blue,
+                              radius: MediaQuery.of(context).size.width * 0.1,
+                              child: Image.asset(
+                                "assets/icons/heart.png",
+                                scale: MediaQuery.of(context).size.width * 0.035,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ),
+            ),
           ],
         ),
       )
