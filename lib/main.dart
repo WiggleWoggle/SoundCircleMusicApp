@@ -126,7 +126,7 @@ class _MusicBarWidgetState extends State<MusicBarWidget> {
                   curve: Curves.easeInOutCirc,
                   duration: Duration(milliseconds: 300),
                   child: GlassContainer(
-                    width: MediaQuery.of(context).size.width * 0.35,
+                    width: MediaQuery.of(context).size.width * 0.45,
                     height: MediaQuery.of(context).size.height * 0.073,
                     red: widget.color.red,
                     green: widget.color.green,
@@ -210,6 +210,50 @@ class _MusicBarWidgetState extends State<MusicBarWidget> {
               ),
             ),
             Positioned.fill(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.155
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AnimatedScale(
+                        scale: expanded ? 0 : 1,
+                        duration: Duration(milliseconds: 200),
+                        curve: Curves.easeInOutCubic,
+                        child: Text(
+                          "Headcrack",
+                          style: TextStyle(
+                            fontFamily: 'InstrumentSans',
+                            color: Colors.white,
+                            fontSize: MediaQuery.of(context).size.width * 0.035,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      AnimatedScale(
+                        scale: expanded ? 0 : 1,
+                        duration: Duration(milliseconds: 200),
+                        curve: Curves.easeInOutCubic,
+                        child: Text(
+                          "Lil Uzi Vert",
+                          style: TextStyle(
+                            fontFamily: 'InstrumentSans',
+                            color: Color.fromRGBO(217, 217, 217, 1),
+                            fontSize: MediaQuery.of(context).size.width * 0.025,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ),
+            ),
+            Positioned.fill(
               child: AnimatedAlign(
                 alignment: Alignment.center,
                 duration: Duration(milliseconds: 350),
@@ -229,7 +273,69 @@ class _MusicBarWidgetState extends State<MusicBarWidget> {
                       radius: MediaQuery.of(context).size.width * 0.04,
                       child: Stack(
                         children: [
-
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height * 0.01,
+                              right: MediaQuery.of(context).size.width * 0.05
+                            ),
+                            child: Align(
+                              alignment: Alignment.topRight,
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.28,
+                                height: MediaQuery.of(context).size.height * 0.073,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Image.asset(
+                                      "assets/icons/previous.png",
+                                      scale: MediaQuery.of(context).size.width * 0.05,
+                                    ),
+                                    Image.asset(
+                                      "assets/icons/pause.png",
+                                      scale: MediaQuery.of(context).size.width * 0.05,
+                                    ),
+                                    Image.asset(
+                                      "assets/icons/next.png",
+                                      scale: MediaQuery.of(context).size.width * 0.05,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.width * 0.04,
+                                left: MediaQuery.of(context).size.width * 0.04,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    "Headcrack",
+                                    style: TextStyle(
+                                      fontFamily: 'InstrumentSans',
+                                      color: Colors.white,
+                                      fontSize: MediaQuery.of(context).size.width * 0.045,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Lil Uzi Vert",
+                                    style: TextStyle(
+                                      fontFamily: 'InstrumentSans',
+                                      color: Color.fromRGBO(217, 217, 217, 1),
+                                      fontSize: MediaQuery.of(context).size.width * 0.03,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     ),

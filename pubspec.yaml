@@ -30,3 +30,8 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+
+  fonts:
+    - family: InstrumentSans
+      fonts:
+        - asset: assets/fonts/InstrumentSans.ttf
