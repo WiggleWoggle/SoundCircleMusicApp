@@ -97,6 +97,10 @@ class _MusicBarWidgetState extends State<MusicBarWidget> {
 
   @override
   Widget build(BuildContext context) {
+
+    double progressDragX = 0;
+    double maxProgressDragX = 0;
+
     return GestureDetector(
         onLongPressStart: (_) {
           scaleUpWidget();
@@ -125,18 +129,36 @@ class _MusicBarWidgetState extends State<MusicBarWidget> {
                   opacity: expandedOpacity,
                   curve: Curves.easeInOutCirc,
                   duration: Duration(milliseconds: 300),
-                  child: GlassContainer(
-                    width: MediaQuery.of(context).size.width * 0.45,
-                    height: MediaQuery.of(context).size.height * 0.073,
-                    red: widget.color.red,
-                    green: widget.color.green,
-                    blue: widget.color.blue,
-                    topRightBorderRadius: 0,
-                    bottomLeftBorderRadius: MediaQuery.of(context).size.width * 0.05,
-                    topLeftBorderRadius: MediaQuery.of(context).size.width * 0.05,
-                    bottomRightBorderRadius: 0,
+                  child: GestureDetector(
+
+                    onHorizontalDragStart: (details) {
+                      setState(() {
+                        progressDragX = MediaQuery.of(context).size.width * 0.85 -
+                            MediaQuery.of(context).size.width * 0.45;
+                      });
+                    },
+
+                    onHorizontalDragUpdate: (details) {
+                      setState(() {
+                        progressDragX += details.delta.dx;
+
+                        progressDragX = progressDragX.clamp(0, maxProgressDragX);
+                      });
+                    },
+
+                    child: GlassContainer(
+                      width: MediaQuery.of(context).size.width * 0.45,
+                      height: MediaQuery.of(context).size.height * 0.073,
+                      red: widget.color.red,
+                      green: widget.color.green,
+                      blue: widget.color.blue,
+                      topRightBorderRadius: 0,
+                      bottomLeftBorderRadius: MediaQuery.of(context).size.width * 0.05,
+                      topLeftBorderRadius: MediaQuery.of(context).size.width * 0.05,
+                      bottomRightBorderRadius: 0,
+                    ),
                   ),
-                ),
+                  )
               ],
             ),
             Positioned.fill(
